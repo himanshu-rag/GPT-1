@@ -77,7 +77,7 @@ def generate_dataset():
     random.shuffle(log_templates)
     
     # Write to dataset file
-    output_path = "input_ids.txt"
+    output_path = "data/input_ids.txt"
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("\n".join(log_templates) + "\n")
     print(f"Dataset generated successfully! {len(log_templates)} logs written to {output_path}")

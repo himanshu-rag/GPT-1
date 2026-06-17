@@ -37,7 +37,7 @@ english_conversations = [
 ]
 
 def generate_dataset():
-    output_path = "input_english.txt"
+    output_path = "data/input_english.txt"
     dataset_content = ""
     
     # Repeat the conversation corpus to give the character-level model enough training samples

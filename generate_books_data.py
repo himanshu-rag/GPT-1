@@ -34,7 +34,7 @@ book_passages = [
 ]
 
 def generate_dataset():
-    output_path = "input_books.txt"
+    output_path = "data/input_books.txt"
     dataset_content = ""
     
     # Repeat the passages to build a robust training corpus of reasoning grammar

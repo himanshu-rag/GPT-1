@@ -31,9 +31,9 @@ random_prompts = [
 ]
 
 def append_fallback():
-    dataset_path = "input_master.txt"
+    dataset_path = "data/input_master.txt"
     if not os.path.exists(dataset_path):
-        print("Error: input_master.txt not found. Run merge_datasets.py first.")
+        print("Error: data/input_master.txt not found. Run merge_datasets.py first.")
         return
 
     fallback_text = ""
@@ -45,7 +45,7 @@ def append_fallback():
 
     with open(dataset_path, "a", encoding="utf-8") as f:
         f.write("\n\n" + fallback_text)
-    print(f"Appended fallback training data to input_master.txt")
+    print(f"Appended fallback training data to data/input_master.txt")
 
 import os
 if __name__ == "__main__":

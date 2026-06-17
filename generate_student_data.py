@@ -64,7 +64,7 @@ student_qa = [
 ]
 
 def generate_dataset():
-    output_path = "input_student.txt"
+    output_path = "data/input_student.txt"
     dataset_content = ""
     
     # Repeat the 10th-grade educational corpus to ensure the model memorizes it

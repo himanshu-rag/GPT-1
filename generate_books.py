@@ -11,9 +11,9 @@ dropout = 0.0
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
 # Load vocabulary
-data_path = "input_books.txt"
+data_path = "data/input_books.txt"
 if not os.path.exists(data_path):
-    print("Error: input_books.txt not found. Run generate_books_data.py first.")
+    print("Error: data/input_books.txt not found. Run generate_books_data.py first.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -38,7 +38,7 @@ model = GPT1LanguageModel(
 ).to(device)
 
 # Load trained weights
-weights_path = 'gpt1_books.pth'
+weights_path = 'weights/gpt1_books.pth'
 if os.path.exists(weights_path):
     model.load_state_dict(torch.load(weights_path, map_location=device))
 else:

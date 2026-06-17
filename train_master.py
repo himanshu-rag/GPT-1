@@ -18,9 +18,9 @@ dropout = 0.1
 print(f"Using device: {device}")
 
 # 1. Read dataset
-data_path = "input_master.txt"
+data_path = "data/input_master.txt"
 if not os.path.exists(data_path):
-    print("Error: input_master.txt not found. Run merge_datasets.py first.")
+    print("Error: data/input_master.txt not found. Run merge_datasets.py first.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -91,8 +91,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_master.pth')
-print("Model weights saved to gpt1_master.pth")
+torch.save(model.state_dict(), 'weights/gpt1_master.pth')
+print("Model weights saved to weights/gpt1_master.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample master text ---")

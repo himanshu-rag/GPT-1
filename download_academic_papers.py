@@ -94,7 +94,7 @@ def fetch_pubmed():
     return text_content
 
 def compile_dataset():
-    output_path = "input_academic.txt"
+    output_path = "data/input_academic.txt"
     compiled_text = ""
     
     compiled_text += fetch_arxiv()

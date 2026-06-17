@@ -103,7 +103,7 @@ def bubble_sort(arr):
 ]
 
 def generate_dataset():
-    output_path = "input_code.txt"
+    output_path = "data/input_code.txt"
     dataset_content = ""
     
     # Repeat the coding examples to help the model learn syntactic structures

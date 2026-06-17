@@ -28,7 +28,7 @@ rfc_urls = {
     "RFC 791 (IP)": "https://www.ietf.org/rfc/rfc791.txt",
     "RFC 768 (UDP)": "https://www.ietf.org/rfc/rfc768.txt"
 }
-data_path = "input_networking.txt"
+data_path = "data/input_networking.txt"
 
 if not os.path.exists(data_path):
     print("Compiling networking dataset from IETF RFC specifications...")
@@ -42,7 +42,7 @@ if not os.path.exists(data_path):
             print(f"Failed to download {name}: {e}")
     with open(data_path, 'w', encoding='utf-8') as f:
         f.write(compiled_text)
-    print("Dataset saved to input_networking.txt")
+    print("Dataset saved to data/input_networking.txt")
 
 with open(data_path, 'r', encoding='utf-8') as f:
     text = f.read()
@@ -112,8 +112,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_networking.pth')
-print("Model weights saved to gpt1_networking.pth")
+torch.save(model.state_dict(), 'weights/gpt1_networking.pth')
+print("Model weights saved to weights/gpt1_networking.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample networking text ---")

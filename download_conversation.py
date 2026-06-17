@@ -73,8 +73,8 @@ if compiled_text:
     if len(encoded) > target_size:
         compiled_text = encoded[:int(target_size)].decode('utf-8', errors='ignore')
         
-    with open("input_conversation.txt", "w", encoding="utf-8") as f:
+    with open("data/input_conversation.txt", "w", encoding="utf-8") as f:
         f.write(compiled_text)
-    print(f"\nSaved compiled dataset to input_conversation.txt (Size: {len(compiled_text.encode('utf-8'))/1024:.1f} KB)")
+    print(f"\nSaved compiled dataset to data/input_conversation.txt (Size: {len(compiled_text.encode('utf-8'))/1024:.1f} KB)")
 else:
     print("\nError: No text was compiled from either dataset.")

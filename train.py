@@ -25,8 +25,8 @@ dropout = 0.1
 print(f"Using device: {device}")
 
 # 1. Download and read dataset
-data_url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
-data_path = "input.txt"
+data_url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/data/input.txt"
+data_path = "data/input.txt"
 if not os.path.exists(data_path):
     print("Downloading Tiny Shakespeare dataset...")
     urllib.request.urlretrieve(data_url, data_path)
@@ -84,7 +84,7 @@ model = GPT1LanguageModel(
 ).to(device)
 
 # Load existing weights if they exist to resume training
-weights_path = 'gpt1_shakespeare.pth'
+weights_path = 'weights/gpt1_shakespeare.pth'
 if os.path.exists(weights_path):
     print(f"Loading existing model weights from {weights_path} to resume training...")
     model.load_state_dict(torch.load(weights_path, map_location=device))
@@ -114,8 +114,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_shakespeare.pth')
-print("Model weights saved to gpt1_shakespeare.pth")
+torch.save(model.state_dict(), 'weights/gpt1_shakespeare.pth')
+print("Model weights saved to weights/gpt1_shakespeare.pth")
 
 # 7. Generate some text from the model
 print("\n--- Generating sample text ---")

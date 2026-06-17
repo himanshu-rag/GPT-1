@@ -54,7 +54,7 @@ instruction_qa = [
 ]
 
 def generate_dataset():
-    output_path = "input_instructions.txt"
+    output_path = "data/input_instructions.txt"
     dataset_content = ""
     
     # Repeat the corpus to ensure the character-level model can map the prompts to exact responses

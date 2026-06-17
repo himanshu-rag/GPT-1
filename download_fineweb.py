@@ -17,9 +17,9 @@ try:
         if len(collected_text.encode('utf-8')) >= target_size:
             break
             
-    with open("input_fineweb.txt", "w", encoding="utf-8") as f:
+    with open("data/input_fineweb.txt", "w", encoding="utf-8") as f:
         f.write(collected_text)
         
-    print(f"Successfully downloaded and saved {len(collected_text.encode('utf-8'))/1024/1024:.2f} MB of FineWeb text to input_fineweb.txt")
+    print(f"Successfully downloaded and saved {len(collected_text.encode('utf-8'))/1024/1024:.2f} MB of FineWeb text to data/input_fineweb.txt")
 except Exception as e:
     print(f"Error streaming FineWeb: {e}")

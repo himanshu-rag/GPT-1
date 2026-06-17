@@ -16,7 +16,7 @@ topics = [
 ]
 
 def fetch_wiki_articles():
-    output_path = "input_web.txt"
+    output_path = "data/input_web.txt"
     compiled_text = ""
     
     for topic in topics:

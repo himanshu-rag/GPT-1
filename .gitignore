@@ -1,7 +1,5 @@
 # Ignore raw text datasets
-input*.txt
-alice.txt
-alice_raw.txt
+data/*.txt
 
 # Python cache
 __pycache__/

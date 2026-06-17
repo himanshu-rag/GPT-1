@@ -11,9 +11,9 @@ dropout = 0.0
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
 # Load vocabulary and token mapping from training dataset
-data_path = "input.txt"
+data_path = "data/input.txt"
 if not os.path.exists(data_path):
-    print("Error: input.txt not found. Run train.py first to download the dataset.")
+    print("Error: data/input.txt not found. Run train.py first to download the dataset.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -38,7 +38,7 @@ model = GPT1LanguageModel(
 ).to(device)
 
 # Load trained weights
-weights_path = 'gpt1_shakespeare.pth'
+weights_path = 'weights/gpt1_shakespeare.pth'
 if os.path.exists(weights_path):
     model.load_state_dict(torch.load(weights_path, map_location=device))
     print(f"Loaded model weights from {weights_path}")

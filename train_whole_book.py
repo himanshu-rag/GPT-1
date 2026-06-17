@@ -24,8 +24,8 @@ print(f"Using device: {device}")
 
 # 1. Download and Clean "Alice's Adventures in Wonderland"
 book_url = "https://www.gutenberg.org/files/11/11-0.txt"
-raw_path = "alice_raw.txt"
-clean_path = "alice.txt"
+raw_path = "data/alice_raw.txt"
+clean_path = "data/alice.txt"
 
 if not os.path.exists(clean_path):
     print("Downloading 'Alice's Adventures in Wonderland' from Project Gutenberg...")
@@ -50,7 +50,7 @@ if not os.path.exists(clean_path):
         
     with open(clean_path, 'w', encoding='utf-8') as f:
         f.write(book_content)
-    print("Book text cleaned and saved to alice.txt")
+    print("Book text cleaned and saved to data/alice.txt")
 
 # Load dataset
 with open(clean_path, 'r', encoding='utf-8') as f:
@@ -121,8 +121,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_alice.pth')
-print("Model weights saved to gpt1_alice.pth")
+torch.save(model.state_dict(), 'weights/gpt1_alice.pth')
+print("Model weights saved to weights/gpt1_alice.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample text from the book ---")

@@ -15,26 +15,26 @@ device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is
 MODES = {
     "1": {
         "name": "Shakespeare Dialog Generator",
-        "weights": "gpt1_shakespeare.pth",
-        "dataset": "input.txt",
+        "weights": "weights/gpt1_shakespeare.pth",
+        "dataset": "data/input.txt",
         "prompt_hint": "Enter character name or dialog start (e.g. 'ROMEO:', 'HAMLET:')"
     },
     "2": {
         "name": "Network Intrusion Detection (IDS) Log Generator",
-        "weights": "gpt1_ids.pth",
-        "dataset": "input_ids.txt",
+        "weights": "weights/gpt1_ids.pth",
+        "dataset": "data/input_ids.txt",
         "prompt_hint": "Enter log filter prefix (e.g. 'proto=TCP src=198.51.100.12', 'proto=UDP')"
     },
     "3": {
         "name": "10th-Grade Educational Study Helper",
-        "weights": "gpt1_student.pth",
-        "dataset": "input_student.txt",
+        "weights": "weights/gpt1_student.pth",
+        "dataset": "data/input_student.txt",
         "prompt_hint": "Ask study questions (e.g. 'what is photosynthesis', 'what is a quadratic equation')"
     },
     "4": {
         "name": "Collins Dictionary Word Lookup",
-        "weights": "gpt1_dictionary.pth",
-        "dataset": "input_dictionary.txt",
+        "weights": "weights/gpt1_dictionary.pth",
+        "dataset": "data/input_dictionary.txt",
         "prompt_hint": "Enter word to search (e.g. 'ephemeral', 'gregarious', 'mitigate')"
     }
 }

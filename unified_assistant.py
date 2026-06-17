@@ -39,20 +39,20 @@ def detect_model_mode(prompt):
 def run_inference(mode, user_prompt):
     # Determine files based on mode
     if mode == "ids":
-        dataset = "input_ids.txt"
-        weights = "gpt1_ids.pth"
+        dataset = "data/input_ids.txt"
+        weights = "weights/gpt1_ids.pth"
         formatted_prompt = user_prompt
     elif mode == "dictionary":
-        dataset = "input_dictionary.txt"
-        weights = "gpt1_dictionary.pth"
+        dataset = "data/input_dictionary.txt"
+        weights = "weights/gpt1_dictionary.pth"
         formatted_prompt = f"Word: {user_prompt.lower()}\n"
     elif mode == "shakespeare":
-        dataset = "input.txt"
-        weights = "gpt1_shakespeare.pth"
+        dataset = "data/input.txt"
+        weights = "weights/gpt1_shakespeare.pth"
         formatted_prompt = user_prompt
     else: # student
-        dataset = "input_student.txt"
-        weights = "gpt1_student.pth"
+        dataset = "data/input_student.txt"
+        weights = "weights/gpt1_student.pth"
         formatted_prompt = f"Question: {user_prompt.lower()}\nAnswer:"
 
     # Load dataset to extract vocab

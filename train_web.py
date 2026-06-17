@@ -18,9 +18,9 @@ dropout = 0.1
 print(f"Using device: {device}")
 
 # 1. Read dataset
-data_path = "input_web.txt"
+data_path = "data/input_web.txt"
 if not os.path.exists(data_path):
-    print("Error: input_web.txt not found. Run download_webpages.py first.")
+    print("Error: data/input_web.txt not found. Run download_webpages.py first.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -91,8 +91,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_web.pth')
-print("Model weights saved to gpt1_web.pth")
+torch.save(model.state_dict(), 'weights/gpt1_web.pth')
+print("Model weights saved to weights/gpt1_web.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample Wikipedia content ---")

@@ -63,7 +63,7 @@ qa_pairs = [
 # We will generate a larger training file by repeating and formatting the Q&A pairs
 # to help the character-level model memorize and generalise the question-answer structure.
 def generate_dataset():
-    output_path = "input_qa.txt"
+    output_path = "data/input_qa.txt"
     dataset_content = ""
     
     # Repeat the Q&A pairs to build a solid corpus of structured text

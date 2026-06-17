@@ -59,8 +59,8 @@ def test_model(model_weights, dataset_file, test_cases, is_dict=False):
 
 # 1. Test 10th-grade Student Model
 test_model(
-    model_weights="gpt1_student.pth",
-    dataset_file="input_student.txt",
+    model_weights="weights/gpt1_student.pth",
+    dataset_file="data/input_student.txt",
     test_cases=[
         "what is a quadratic equation",
         "what are newton's laws of motion"
@@ -69,8 +69,8 @@ test_model(
 
 # 2. Test English / Networking Model
 test_model(
-    model_weights="gpt1_english.pth",
-    dataset_file="input_english.txt",
+    model_weights="weights/gpt1_english.pth",
+    dataset_file="data/input_english.txt",
     test_cases=[
         "how does dns work"
     ]
@@ -78,8 +78,8 @@ test_model(
 
 # 3. Test Collins Dictionary Model
 test_model(
-    model_weights="gpt1_dictionary.pth",
-    dataset_file="input_dictionary.txt",
+    model_weights="weights/gpt1_dictionary.pth",
+    dataset_file="data/input_dictionary.txt",
     test_cases=[
         "juxtaposition"
     ],

@@ -18,9 +18,9 @@ dropout = 0.1
 print(f"Using device: {device}")
 
 # 1. Read dataset
-data_path = "input_conversation.txt"
+data_path = "data/input_conversation.txt"
 if not os.path.exists(data_path):
-    print("Error: input_conversation.txt not found.")
+    print("Error: data/input_conversation.txt not found.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -89,8 +89,8 @@ for iter in range(max_iters):
         # Save checkpoints periodically
         if losses['val'] < best_val_loss:
             best_val_loss = losses['val']
-            torch.save(model.state_dict(), 'gpt1_conversation.pth')
-            print(f"--> Saved best model weights to gpt1_conversation.pth (Val Loss: {losses['val']:.4f})")
+            torch.save(model.state_dict(), 'weights/gpt1_conversation.pth')
+            print(f"--> Saved best model weights to weights/gpt1_conversation.pth (Val Loss: {losses['val']:.4f})")
 
     xb, yb = get_batch('train')
     logits, loss = model(xb, yb)
@@ -99,8 +99,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save final model weights
-torch.save(model.state_dict(), 'gpt1_conversation.pth')
-print("Model training complete. Final weights saved to gpt1_conversation.pth")
+torch.save(model.state_dict(), 'weights/gpt1_conversation.pth')
+print("Model training complete. Final weights saved to weights/gpt1_conversation.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample conversational response ---")

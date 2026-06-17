@@ -32,7 +32,7 @@ chat_qa = [
 ]
 
 def generate_dataset():
-    output_path = "input_chat.txt"
+    output_path = "data/input_chat.txt"
     dataset_content = ""
     
     # Shuffle and repeat the dataset 350 times to build a compact 700KB conversational model training set

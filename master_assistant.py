@@ -11,9 +11,9 @@ n_layer = 4
 dropout = 0.0
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
-# Model Vocab loading from input_master.txt
-dataset_path = "input_master.txt"
-weights_path = "gpt1_master.pth"
+# Model Vocab loading from data/input_master.txt
+dataset_path = "data/input_master.txt"
+weights_path = "weights/gpt1_master.pth"
 
 if not os.path.exists(dataset_path) or not os.path.exists(weights_path):
     print("Error: Missing master dataset or model weights. Train the model first.")

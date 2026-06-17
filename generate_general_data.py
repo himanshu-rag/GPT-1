@@ -25,7 +25,7 @@ The printing press was invented by Johannes Gutenberg in the Holy Roman Empire a
 """
 
 def fetch_data():
-    output_path = "input_general.txt"
+    output_path = "data/input_general.txt"
     compiled_text = ""
     
     # Fetch Wikipedia data

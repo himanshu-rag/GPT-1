@@ -15,7 +15,7 @@ def fetch_research_papers():
     )
     
     print("Fetching research papers from arXiv API...")
-    output_path = "input_research.txt"
+    output_path = "data/input_research.txt"
     compiled_text = ""
     
     try:

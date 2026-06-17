@@ -27,13 +27,13 @@ def setup_tokenizer(data_path):
 
 # Load setups
 print("Loading Academic model vocabulary...")
-acad_vocab_size, acad_stoi, acad_itos, acad_encode, acad_decode = setup_tokenizer("input_academic.txt")
+acad_vocab_size, acad_stoi, acad_itos, acad_encode, acad_decode = setup_tokenizer("data/input_academic.txt")
 
 print("Loading FineWeb model vocabulary...")
-fw_vocab_size, fw_stoi, fw_itos, fw_encode, fw_decode = setup_tokenizer("input_fineweb.txt")
+fw_vocab_size, fw_stoi, fw_itos, fw_encode, fw_decode = setup_tokenizer("data/input_fineweb.txt")
 
 print("Loading Chat Assistant vocabulary...")
-chat_vocab_size, chat_stoi, chat_itos, chat_encode, chat_decode = setup_tokenizer("input_conversation.txt")
+chat_vocab_size, chat_stoi, chat_itos, chat_encode, chat_decode = setup_tokenizer("data/input_conversation.txt")
 
 # 2. Initialize and load models
 def load_model(vocab_size, weights_path, block_size):
@@ -55,13 +55,13 @@ def load_model(vocab_size, weights_path, block_size):
     return model
 
 print("Initializing Academic model...")
-academic_model = load_model(acad_vocab_size, 'gpt1_academic.pth', block_size=256)
+academic_model = load_model(acad_vocab_size, 'weights/gpt1_academic.pth', block_size=256)
 
 print("Initializing FineWeb model...")
-fineweb_model = load_model(fw_vocab_size, 'gpt1_fineweb.pth', block_size=256)
+fineweb_model = load_model(fw_vocab_size, 'weights/gpt1_fineweb.pth', block_size=256)
 
 print("Initializing Chat Assistant model...")
-chat_model = load_model(chat_vocab_size, 'gpt1_conversation.pth', block_size=256)
+chat_model = load_model(chat_vocab_size, 'weights/gpt1_conversation.pth', block_size=256)
 
 # Router dictionary for requests
 models_config = {

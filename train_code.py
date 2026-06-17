@@ -18,9 +18,9 @@ dropout = 0.1
 print(f"Using device: {device}")
 
 # 1. Read dataset
-data_path = "input_code.txt"
+data_path = "data/input_code.txt"
 if not os.path.exists(data_path):
-    print("Error: input_code.txt not found. Run generate_code_data.py first.")
+    print("Error: data/input_code.txt not found. Run generate_code_data.py first.")
     exit(1)
 
 with open(data_path, 'r', encoding='utf-8') as f:
@@ -91,8 +91,8 @@ for iter in range(max_iters):
     optimizer.step()
 
 # Save the trained model weights
-torch.save(model.state_dict(), 'gpt1_code.pth')
-print("Model weights saved to gpt1_code.pth")
+torch.save(model.state_dict(), 'weights/gpt1_code.pth')
+print("Model weights saved to weights/gpt1_code.pth")
 
 # 6. Generate sample text
 print("\n--- Generating sample code implementation ---")

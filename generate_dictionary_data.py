@@ -28,7 +28,7 @@ dictionary_entries = [
 ]
 
 def generate_dataset():
-    output_path = "input_dictionary.txt"
+    output_path = "data/input_dictionary.txt"
     dataset_content = ""
     
     # Repeat the dictionary entries to train the character-level model on the definition formats

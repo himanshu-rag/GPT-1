@@ -162,10 +162,10 @@ ARP bridges Layer 3 (IP addressing) and Layer 2 (MAC addressing).
 - ARP Table/Cache: Operating systems store IP-to-MAC mappings in local memory to speed up communication.
 """
 
-data_path = "/Users/himanshu_rags/Desktop/GPT-1/input_networking.txt"
+data_path = "/Users/himanshu_rags/Desktop/GPT-1/data/input_networking.txt"
 
 # Append the educational text to the existing RFC dataset
 with open(data_path, 'a', encoding='utf-8') as f:
     f.write("\n\n" + educational_text)
 
-print("Appended network models and protocols chapter to input_networking.txt")
+print("Appended network models and protocols chapter to data/input_networking.txt")

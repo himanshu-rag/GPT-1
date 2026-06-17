@@ -11,7 +11,7 @@ dropout = 0.0
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
 # Load vocabulary
-with open("input_ids.txt", 'r', encoding='utf-8') as f:
+with open("data/input_ids.txt", 'r', encoding='utf-8') as f:
     text = f.read()
 
 chars = sorted(list(set(text)))
@@ -32,7 +32,7 @@ model = GPT1LanguageModel(
     device=device
 ).to(device)
 
-model.load_state_dict(torch.load('gpt1_ids.pth', map_location=device))
+model.load_state_dict(torch.load('weights/gpt1_ids.pth', map_location=device))
 model.eval()
 
 def ask_scenario(prompt, scenario_desc):
