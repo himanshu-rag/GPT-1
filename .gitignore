@@ -1,0 +1,14 @@
+# Ignore raw text datasets
+input*.txt
+alice.txt
+alice_raw.txt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS metadata
+.DS_Store
+
+# Ignore Gemini agent logs
+.gemini/
