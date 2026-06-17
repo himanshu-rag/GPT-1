@@ -73,6 +73,14 @@ model = GPT1LanguageModel(
     device=device
 ).to(device)
 
+weights_path = 'weights/gpt1_conversation.pth'
+if os.path.exists(weights_path):
+    print(f"Loading existing weights from {weights_path} to resume training...")
+    try:
+        model.load_state_dict(torch.load(weights_path, map_location=device))
+    except Exception as e:
+        print(f"Could not load weights directly: {e}. Starting fresh.")
+
 num_params = sum(p.numel() for p in model.parameters()) / 1e6
 print(f"Model vocab size: {vocab_size} | Parameter count: {num_params:.2f}M | Context Window: {block_size}")
 
