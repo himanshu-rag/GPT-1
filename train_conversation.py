@@ -5,7 +5,7 @@ from gpt1 import GPT1LanguageModel
 # Hyperparameters
 batch_size = 64
 block_size = 256
-max_iters = 6000
+max_iters = 18000
 eval_interval = 1000
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
