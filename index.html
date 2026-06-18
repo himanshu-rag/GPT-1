@@ -589,9 +589,22 @@
                 { name: "Web Advice: Fire Prevention", value: "If you have set yourself on fire, do not run. " }
             ],
             auto: [
-                { name: "Chat: Explain Quantum Computing", value: "Explain Quantum Computing in simple terms." },
-                { name: "Academic: Abstract on Transformers", value: "Source: arXiv | Title: Attention Is All You Need" },
-                { name: "Web: General Text Completion", value: "Technology has revolutionized the way we work" }
+                { name: "✏️  Type your own prompt...", value: "" },
+                { name: "👋  Hello / Greeting", value: "hello" },
+                { name: "📖  Word meaning: happy", value: "what is the meaning of happy" },
+                { name: "🔢  Simple math: 5 + 3", value: "what is 5 plus 3" },
+                { name: "📐  Pythagoras theorem", value: "what is pythagoras theorem" },
+                { name: "📊  Quadratic formula", value: "what is the quadratic formula" },
+                { name: "📏  Area of a circle", value: "what is the area of circle formula" },
+                { name: "📐  Trigonometric ratios", value: "what are the trigonometric ratios" },
+                { name: "📈  Laws of exponents", value: "what are the laws of exponents" },
+                { name: "🌍  Geography: Capital of France", value: "what is the capital of france" },
+                { name: "🐾  Animal: What is a dog", value: "what is a dog" },
+                { name: "🎨  Color: Sky color", value: "what color is the sky" },
+                { name: "📅  Days of the week", value: "what are the days of the week" },
+                { name: "🔬  Science: Photosynthesis", value: "what is photosynthesis" },
+                { name: "🧠  Academic: Transformers paper", value: "Source: arXiv | Title: Attention Is All You Need" },
+                { name: "🌐  Web: Technology text", value: "Technology has revolutionized the way we work" }
             ]
         };
 
@@ -639,18 +652,28 @@
                     selectEl.appendChild(opt);
                 });
 
-                // Auto-fill prompt input with the first preset
-                if (presets[modelType].length > 0) {
-                    document.getElementById('prompt').value = presets[modelType][0].value;
+                // Auto-fill prompt with first preset only if it has a value
+                const firstPreset = presets[modelType][0];
+                if (firstPreset && firstPreset.value) {
+                    document.getElementById('prompt').value = firstPreset.value;
                 } else {
                     document.getElementById('prompt').value = "";
+                    document.getElementById('prompt').placeholder = "Type any question or prompt here...";
                 }
             }
         }
 
         function applyPreset() {
             const selectEl = document.getElementById('presets');
-            document.getElementById('prompt').value = selectEl.value;
+            const val = selectEl.value;
+            if (val === "") {
+                // "Type your own" selected — clear box and let user type
+                document.getElementById('prompt').value = "";
+                document.getElementById('prompt').placeholder = "Type any question or prompt here...";
+                document.getElementById('prompt').focus();
+            } else {
+                document.getElementById('prompt').value = val;
+            }
         }
 
         function updateSliderVal(val) {
@@ -698,7 +721,11 @@
                     const modelNameMap = {
                         academic: "Academic Papers",
                         fineweb: "FineWeb Crawl",
-                        chat: "Siri Assistant"
+                        chat: "Siri Assistant",
+                        wikipedia: "Wikipedia Encyclopedia",
+                        books: "Classic Literature Books",
+                        basic: "Basic Knowledge",
+                        maths: "Mathematics (Class 1–10)"
                     };
                     const routedModel = modelNameMap[data.model_used] || data.model_used;
                     document.getElementById('outputLabel').textContent = `Unified Model (Auto-Routed to: ${routedModel})`;

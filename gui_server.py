@@ -41,13 +41,31 @@ if os.path.exists("data/input_wikipedia.txt"):
     wiki_vocab_size, wiki_stoi, wiki_itos, wiki_encode, wiki_decode = setup_tokenizer("data/input_wikipedia.txt")
     wiki_loaded = True
 
+books_loaded = False
+if os.path.exists("data/input_books.txt"):
+    print("Loading Books model vocabulary...")
+    books_vocab_size, books_stoi, books_itos, books_encode, books_decode = setup_tokenizer("data/input_books.txt")
+    books_loaded = True
+
+basic_loaded = False
+if os.path.exists("data/input_basic.txt"):
+    print("Loading Basic Knowledge model vocabulary...")
+    basic_vocab_size, basic_stoi, basic_itos, basic_encode, basic_decode = setup_tokenizer("data/input_basic.txt")
+    basic_loaded = True
+
+maths_loaded = False
+if os.path.exists("data/input_maths.txt"):
+    print("Loading Mathematics model vocabulary...")
+    maths_vocab_size, maths_stoi, maths_itos, maths_encode, maths_decode = setup_tokenizer("data/input_maths.txt")
+    maths_loaded = True
+
 # 2. Initialize and load models
-def load_model(vocab_size, weights_path, block_size):
+def load_model(vocab_size, weights_path, block_size, n_embd=128, n_head=4, n_layer=4):
     model = GPT1LanguageModel(
         vocab_size=vocab_size,
-        n_embd=128,
-        n_head=4,
-        n_layer=4,
+        n_embd=n_embd,
+        n_head=n_head,
+        n_layer=n_layer,
         block_size=block_size,
         dropout=0.0,
         device=device
@@ -118,11 +136,87 @@ if wiki_loaded:
         "stoi": wiki_stoi
     }
 
+if books_loaded:
+    print("Initializing Literature Books model...")
+    books_model = load_model(books_vocab_size, 'weights/gpt1_books.pth', block_size=512)
+    models_config["books"] = {
+        "model": books_model,
+        "encode": books_encode,
+        "decode": books_decode,
+        "stoi": books_stoi
+    }
+
+if basic_loaded:
+    print("Initializing Basic Knowledge model...")
+    basic_model = load_model(basic_vocab_size, 'weights/gpt1_basic.pth', block_size=256, n_embd=192, n_head=6, n_layer=6)
+    models_config["basic"] = {
+        "model": basic_model,
+        "encode": basic_encode,
+        "decode": basic_decode,
+        "stoi": basic_stoi
+    }
+
+if maths_loaded:
+    print("Initializing Mathematics model...")
+    maths_model = load_model(maths_vocab_size, 'weights/gpt1_maths.pth', block_size=512, n_embd=256, n_head=8, n_layer=8)
+    models_config["maths"] = {
+        "model": maths_model,
+        "encode": maths_encode,
+        "decode": maths_decode,
+        "stoi": maths_stoi
+    }
+
 def classify_prompt(prompt):
     p_lower = prompt.lower().strip()
     
+    if books_loaded and (p_lower.startswith("book:") or "sherlock" in p_lower or "holmes" in p_lower or "frankenstein" in p_lower or "dracula" in p_lower or "literature" in p_lower):
+        return "books"
+        
     if wiki_loaded and (p_lower.startswith("article title:") or p_lower.startswith("article:") or "wikipedia" in p_lower or "encyclopedia" in p_lower):
         return "wikipedia"
+    
+    # Maths: route all math-related topics to maths model
+    maths_triggers = [
+        "theorem", "formula", "equation", "algebra", "geometry", "trigonometry",
+        "arithmetic", "calculus", "polynomial", "quadratic", "linear equation",
+        "pythagoras", "pythagorean", "sin", "cos", "tan", "cosine", "sine",
+        "hcf", "lcm", "prime factor", "factoris", "factori",
+        "perimeter", "area of", "volume of", "surface area",
+        "triangle", "rectangle", "square", "circle", "parallelogram", "trapezium",
+        "probability", "statistics", "mean", "median", "mode",
+        "ratio", "proportion", "percentage", "profit", "loss", "interest",
+        "exponent", "logarithm", "square root", "cube root",
+        "bodmas", "pemdas", "arithmetic progression", "ap formula",
+        "coordinate", "distance formula", "midpoint", "slope",
+        "divisibility", "remainder theorem", "factor theorem",
+        "discriminant", "roots of", "sum of roots", "product of roots",
+        "congruent", "similar triangle", "bpt", "basic proportionality",
+        "simple interest", "compound interest", "discount",
+        "mensuration", "heron", "frustum", "cylinder", "cone", "sphere",
+        "class 10", "class 9", "class 8", "maths", "math", "mathematics",
+        "what is 1 +", "what is 2 +", "solve", "calculate", "find the value",
+    ]
+    if maths_loaded and any(k in p_lower for k in maths_triggers):
+        return "maths"
+
+    # Basic knowledge: greetings, simple definitions, numbers, colors, shapes, animals, grammar
+    basic_triggers = [
+        "hello", "hi", "hey", "good morning", "good afternoon", "good evening", "good night",
+        "how are you", "what is your name", "who are you", "thank you", "thanks", "bye", "goodbye",
+        "what is the meaning of", "what does", "define ", "explain the word",
+        "what color", "what are the colors", "primary color",
+        "what are the days", "days of the week", "months of the year",
+        "how many days", "how many months", "how many letters", "how many planets", "how many continents",
+        "opposite of", "antonym of", "synonym of",
+        "what is a noun", "what is a verb", "what is an adjective", "what is grammar",
+        "plus", "minus", "times", "divided by", "multiplied by",
+        "what animal", "tell me about dogs", "tell me about cats", "what is a dog", "what is a cat",
+        "what is the sun", "what is the moon", "why is the sky", "why do we",
+        "what do you use to", "what makes", "can you see", "is a tomato",
+        "even number", "odd number",
+    ]
+    if basic_loaded and any(k in p_lower for k in basic_triggers):
+        return "basic"
         
     if p_lower.startswith("source: arxiv") or p_lower.startswith("source: semantic scholar") or p_lower.startswith("source: pubmed"):
         return "academic"
@@ -147,7 +241,7 @@ def classify_prompt(prompt):
         
     chat_keywords = [
         "how to", "write a", "explain", "who is", "what is", "where is", "why does",
-        "hello", "hi", "hey", "can you", "please", "question", "tell me", "solve",
+        "can you", "please", "question", "tell me", "solve",
         "translate", "summarize", "help me", "ai", "assistant", "chat", "instruction"
     ]
     if any(k in p_lower for k in chat_keywords) or "?" in p_lower or p_lower.startswith(("what", "how", "who", "why", "where", "can", "could", "would", "should", "will", "is", "are")):
@@ -201,7 +295,7 @@ class GeneratorHandler(http.server.BaseHTTPRequestHandler):
                 stoi = config["stoi"]
                 
                 # Format prompt based on model type
-                if selected_model == "chat":
+                if selected_model in ("chat", "basic"):
                     if not prompt.strip().startswith("Instruction:"):
                         formatted_prompt = f"Instruction: {prompt}\nResponse:"
                     else:
@@ -223,17 +317,22 @@ class GeneratorHandler(http.server.BaseHTTPRequestHandler):
                 
                 output_text = decode(generated_seq)
                 
-                # Post-process response output for chat
-                if selected_model == "chat":
+                # Post-process response output for chat/basic
+                raw_output = output_text
+                if selected_model in ("chat", "basic"):
                     if "Response:" in output_text:
                         parts = output_text.split("Response:")
                         res = parts[1].strip()
                         if "Instruction:" in res:
                             res = res.split("Instruction:")[0].strip()
-                        output_text = res
+                        output_text = res if res.strip() else raw_output
                     else:
-                        # Fallback if Response: tag was somehow stripped or missing
-                        output_text = output_text.replace(formatted_prompt, "").strip()
+                        cleaned = output_text.replace(formatted_prompt, "").strip()
+                        output_text = cleaned if cleaned else raw_output
+                
+                # Safety net: never return empty output
+                if not output_text.strip():
+                    output_text = raw_output if raw_output.strip() else "[Model generated no output. Try a different prompt or more tokens.]"
                 
                 # Send JSON response
                 self.send_response(200)
