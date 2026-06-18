@@ -627,17 +627,24 @@
 
                 // Load presets
                 const selectEl = document.getElementById('presets');
-                selectEl.innerHTML = '<option value="" disabled selected>Select preset...</option>';
+                selectEl.innerHTML = '';
                 
-                presets[modelType].forEach(preset => {
+                presets[modelType].forEach((preset, index) => {
                     const opt = document.createElement('option');
                     opt.value = preset.value;
                     opt.textContent = preset.name;
+                    if (index === 0) {
+                        opt.selected = true;
+                    }
                     selectEl.appendChild(opt);
                 });
 
-                // Reset prompt area
-                document.getElementById('prompt').value = "";
+                // Auto-fill prompt input with the first preset
+                if (presets[modelType].length > 0) {
+                    document.getElementById('prompt').value = presets[modelType][0].value;
+                } else {
+                    document.getElementById('prompt').value = "";
+                }
             }
         }
 
