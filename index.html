@@ -488,6 +488,7 @@
             <button class="pill-btn active" id="tabAcademic" onclick="selectModel('academic')">Academic Papers</button>
             <button class="pill-btn" id="tabFineWeb" onclick="selectModel('fineweb')">FineWeb Crawl</button>
             <button class="pill-btn" id="tabChat" onclick="selectModel('chat')">Siri Assistant</button>
+            <button class="pill-btn" id="tabAuto" onclick="selectModel('auto')">Unified (Auto-Detect)</button>
         </div>
 
         <!-- 1. Document Generator View (Academic / FineWeb) -->
@@ -586,6 +587,11 @@
                 { name: "Opinion: Public forums", value: "Looking at the issue, we know it wasn't written " },
                 { name: "Informative: Cancer Research", value: "A novel two-step immunotherapy approach has shown " },
                 { name: "Web Advice: Fire Prevention", value: "If you have set yourself on fire, do not run. " }
+            ],
+            auto: [
+                { name: "Chat: Explain Quantum Computing", value: "Explain Quantum Computing in simple terms." },
+                { name: "Academic: Abstract on Transformers", value: "Source: arXiv | Title: Attention Is All You Need" },
+                { name: "Web: General Text Completion", value: "Technology has revolutionized the way we work" }
             ]
         };
 
@@ -599,6 +605,7 @@
             document.getElementById('tabAcademic').classList.toggle('active', modelType === 'academic');
             document.getElementById('tabFineWeb').classList.toggle('active', modelType === 'fineweb');
             document.getElementById('tabChat').classList.toggle('active', modelType === 'chat');
+            document.getElementById('tabAuto').classList.toggle('active', modelType === 'auto');
             
             if (modelType === 'chat') {
                 // Show chat view
@@ -615,7 +622,8 @@
                 document.getElementById('docView').classList.add('active');
                 
                 // Toggle label
-                document.getElementById('outputLabel').textContent = `${modelType.charAt(0).toUpperCase() + modelType.slice(1)} Model Completion`;
+                const labelText = modelType === 'auto' ? "Unified (Auto-Detect) Model" : `${modelType.charAt(0).toUpperCase() + modelType.slice(1)} Model Completion`;
+                document.getElementById('outputLabel').textContent = labelText;
 
                 // Load presets
                 const selectEl = document.getElementById('presets');
@@ -678,6 +686,18 @@
 
                 const data = await response.json();
                 outputText.textContent = data.output;
+                
+                if (currentModel === 'auto' && data.model_used) {
+                    const modelNameMap = {
+                        academic: "Academic Papers",
+                        fineweb: "FineWeb Crawl",
+                        chat: "Siri Assistant"
+                    };
+                    const routedModel = modelNameMap[data.model_used] || data.model_used;
+                    document.getElementById('outputLabel').textContent = `Unified Model (Auto-Routed to: ${routedModel})`;
+                } else if (currentModel === 'auto') {
+                    document.getElementById('outputLabel').textContent = "Unified (Auto-Detect) Model";
+                }
             } catch (err) {
                 console.error(err);
                 outputText.textContent = "Error occurred. Please verify that the local server is running.";

@@ -85,6 +85,33 @@ models_config = {
     }
 }
 
+def classify_prompt(prompt):
+    p_lower = prompt.lower().strip()
+    if p_lower.startswith("source: arxiv") or p_lower.startswith("source: semantic scholar") or p_lower.startswith("source: pubmed"):
+        return "academic"
+    if p_lower.startswith("instruction:"):
+        return "chat"
+    if p_lower.startswith("the internet is") or p_lower.startswith("technology has") or p_lower.startswith("once upon a time"):
+        return "fineweb"
+        
+    academic_keywords = [
+        "arxiv", "abstract", "paper", "study", "research", "journal", "citation", 
+        "algorithm", "methodology", "dataset", "deep learning for", "neural network",
+        "scientific", "experiment", "evaluation", "results of", "proposed method"
+    ]
+    if any(k in p_lower for k in academic_keywords):
+        return "academic"
+        
+    chat_keywords = [
+        "how to", "write a", "explain", "who is", "what is", "where is", "why does",
+        "hello", "hi", "hey", "can you", "please", "question", "tell me", "solve",
+        "translate", "summarize", "help me", "ai", "assistant", "chat", "instruction"
+    ]
+    if any(k in p_lower for k in chat_keywords) or "?" in p_lower or p_lower.startswith(("what", "how", "who", "why", "where", "can", "could", "would", "should", "will", "is", "are")):
+        return "chat"
+        
+    return "fineweb"
+
 class GeneratorHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         # Suppress logging to keep output clean
@@ -110,23 +137,32 @@ class GeneratorHandler(http.server.BaseHTTPRequestHandler):
                 max_tokens = int(data.get("max_tokens", 250))
                 model_type = data.get("model_type", "fineweb")
                 
+                # Auto detect model if requested
+                selected_model = model_type
+                if model_type == "auto":
+                    selected_model = classify_prompt(prompt)
+                    print(f"Auto-classified prompt to: '{selected_model}'")
+                
                 # Limit tokens to avoid server blocking too long
                 max_tokens = min(max_tokens, 500)
                 
-                print(f"Generating for model: '{model_type}' | prompt: '{prompt[:40]}...' | tokens: {max_tokens}")
+                print(f"Generating for model: '{selected_model}' (requested: '{model_type}') | prompt: '{prompt[:40]}...' | tokens: {max_tokens}")
                 
-                if model_type not in models_config:
-                    model_type = "fineweb"
+                if selected_model not in models_config:
+                    selected_model = "fineweb"
                 
-                config = models_config[model_type]
+                config = models_config[selected_model]
                 model = config["model"]
                 encode = config["encode"]
                 decode = config["decode"]
                 stoi = config["stoi"]
                 
                 # Format prompt based on model type
-                if model_type == "chat":
-                    formatted_prompt = f"Instruction: {prompt}\nResponse:"
+                if selected_model == "chat":
+                    if not prompt.strip().startswith("Instruction:"):
+                        formatted_prompt = f"Instruction: {prompt}\nResponse:"
+                    else:
+                        formatted_prompt = prompt
                 else:
                     formatted_prompt = prompt
                 
@@ -139,13 +175,13 @@ class GeneratorHandler(http.server.BaseHTTPRequestHandler):
                 
                 with torch.no_grad():
                     # If chat model, limit generate tokens slightly to keep responses short & snappy
-                    tokens_to_gen = min(max_tokens, 150) if model_type == "chat" else max_tokens
+                    tokens_to_gen = min(max_tokens, 150) if selected_model == "chat" else max_tokens
                     generated_seq = model.generate(context, max_new_tokens=tokens_to_gen)[0].tolist()
                 
                 output_text = decode(generated_seq)
                 
                 # Post-process response output for chat
-                if model_type == "chat":
+                if selected_model == "chat":
                     if "Response:" in output_text:
                         parts = output_text.split("Response:")
                         res = parts[1].strip()
@@ -160,7 +196,10 @@ class GeneratorHandler(http.server.BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
-                response = {"output": output_text}
+                response = {
+                    "output": output_text,
+                    "model_used": selected_model
+                }
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 
             except Exception as e:
