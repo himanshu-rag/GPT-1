@@ -47,8 +47,25 @@ def load_model(vocab_size, weights_path, block_size):
         device=device
     ).to(device)
     if os.path.exists(weights_path):
-        model.load_state_dict(torch.load(weights_path, map_location=device))
-        print(f"Loaded weights from {weights_path}")
+        try:
+            checkpoint = torch.load(weights_path, map_location=device)
+            checkpoint_vocab = checkpoint['token_embedding_table.weight'].shape[0]
+            if checkpoint_vocab != vocab_size:
+                print(f"Vocab mismatch for {weights_path}: Checkpoint ({checkpoint_vocab}) vs Server ({vocab_size}). Adapting weights...")
+                model_dict = model.state_dict()
+                min_vocab = min(checkpoint_vocab, vocab_size)
+                model_dict['token_embedding_table.weight'][:min_vocab] = checkpoint['token_embedding_table.weight'][:min_vocab]
+                model_dict['lm_head.weight'][:min_vocab] = checkpoint['lm_head.weight'][:min_vocab]
+                model_dict['lm_head.bias'][:min_vocab] = checkpoint['lm_head.bias'][:min_vocab]
+                for k, v in checkpoint.items():
+                    if k not in ['token_embedding_table.weight', 'lm_head.weight', 'lm_head.bias']:
+                        model_dict[k] = v
+                model.load_state_dict(model_dict)
+            else:
+                model.load_state_dict(checkpoint)
+            print(f"Loaded weights from {weights_path}")
+        except Exception as e:
+            print(f"Error loading {weights_path}: {e}")
     else:
         print(f"Warning: {weights_path} not found. Running with uninitialized weights.")
     model.eval()

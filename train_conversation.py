@@ -5,7 +5,7 @@ from gpt1 import GPT1LanguageModel
 # Hyperparameters
 batch_size = 64
 block_size = 256
-max_iters = 18000
+max_iters = 6000
 eval_interval = 1000
 learning_rate = 1e-3
 device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
@@ -77,7 +77,22 @@ weights_path = 'weights/gpt1_conversation.pth'
 if os.path.exists(weights_path):
     print(f"Loading existing weights from {weights_path} to resume training...")
     try:
-        model.load_state_dict(torch.load(weights_path, map_location=device))
+        checkpoint = torch.load(weights_path, map_location=device)
+        checkpoint_vocab = checkpoint['token_embedding_table.weight'].shape[0]
+        if checkpoint_vocab != vocab_size:
+            print(f"Vocab mismatch: Checkpoint ({checkpoint_vocab}) vs Current ({vocab_size}). Adapting layers...")
+            model_dict = model.state_dict()
+            min_vocab = min(checkpoint_vocab, vocab_size)
+            model_dict['token_embedding_table.weight'][:min_vocab] = checkpoint['token_embedding_table.weight'][:min_vocab]
+            model_dict['lm_head.weight'][:min_vocab] = checkpoint['lm_head.weight'][:min_vocab]
+            model_dict['lm_head.bias'][:min_vocab] = checkpoint['lm_head.bias'][:min_vocab]
+            for k, v in checkpoint.items():
+                if k not in ['token_embedding_table.weight', 'lm_head.weight', 'lm_head.bias']:
+                    model_dict[k] = v
+            model.load_state_dict(model_dict)
+        else:
+            model.load_state_dict(checkpoint)
+        print("Weights successfully loaded.")
     except Exception as e:
         print(f"Could not load weights directly: {e}. Starting fresh.")
 
