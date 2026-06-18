@@ -35,6 +35,12 @@ fw_vocab_size, fw_stoi, fw_itos, fw_encode, fw_decode = setup_tokenizer("data/in
 print("Loading Chat Assistant vocabulary...")
 chat_vocab_size, chat_stoi, chat_itos, chat_encode, chat_decode = setup_tokenizer("data/input_conversation.txt")
 
+wiki_loaded = False
+if os.path.exists("data/input_wikipedia.txt"):
+    print("Loading Wikipedia model vocabulary...")
+    wiki_vocab_size, wiki_stoi, wiki_itos, wiki_encode, wiki_decode = setup_tokenizer("data/input_wikipedia.txt")
+    wiki_loaded = True
+
 # 2. Initialize and load models
 def load_model(vocab_size, weights_path, block_size):
     model = GPT1LanguageModel(
@@ -102,8 +108,22 @@ models_config = {
     }
 }
 
+if wiki_loaded:
+    print("Initializing Wikipedia model...")
+    wikipedia_model = load_model(wiki_vocab_size, 'weights/gpt1_wikipedia.pth', block_size=256)
+    models_config["wikipedia"] = {
+        "model": wikipedia_model,
+        "encode": wiki_encode,
+        "decode": wiki_decode,
+        "stoi": wiki_stoi
+    }
+
 def classify_prompt(prompt):
     p_lower = prompt.lower().strip()
+    
+    if wiki_loaded and (p_lower.startswith("article title:") or p_lower.startswith("article:") or "wikipedia" in p_lower or "encyclopedia" in p_lower):
+        return "wikipedia"
+        
     if p_lower.startswith("source: arxiv") or p_lower.startswith("source: semantic scholar") or p_lower.startswith("source: pubmed"):
         return "academic"
     if p_lower.startswith("instruction:"):
@@ -118,6 +138,12 @@ def classify_prompt(prompt):
     ]
     if any(k in p_lower for k in academic_keywords):
         return "academic"
+        
+    # Check for general encyclopedic/factual questions for Wikipedia (if loaded)
+    if wiki_loaded:
+        wiki_question_keywords = ["history of", "tell me about", "who was", "where is", "when did", "biography", "capital of", "population of"]
+        if any(k in p_lower for k in wiki_question_keywords):
+            return "wikipedia"
         
     chat_keywords = [
         "how to", "write a", "explain", "who is", "what is", "where is", "why does",
