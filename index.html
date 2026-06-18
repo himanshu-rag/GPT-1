@@ -483,8 +483,8 @@
             <p class="subtitle">Experience lightweight character-level Transformer models</p>
         </header>
 
-        <!-- Segment Selector Tab bar -->
-        <div class="pill-control">
+        <!-- Segment Selector Tab bar (Hidden to show only Unified) -->
+        <div class="pill-control" style="display: none;">
             <button class="pill-btn active" id="tabAcademic" onclick="selectModel('academic')">Academic Papers</button>
             <button class="pill-btn" id="tabFineWeb" onclick="selectModel('fineweb')">FineWeb Crawl</button>
             <button class="pill-btn" id="tabChat" onclick="selectModel('chat')">Siri Assistant</button>
@@ -596,7 +596,7 @@
         };
 
         // Initialize view
-        selectModel('academic');
+        selectModel('auto');
 
         function selectModel(modelType) {
             currentModel = modelType;
